@@ -38,4 +38,10 @@ public class User {
 
     @Column(precision = 10, scale = 2)
     private BigDecimal commission = BigDecimal.ZERO;
+
+    public User(String login, String password, UserType userType) {
+        this.login = login;
+        this.password = password;
+        this.userType = userType;
+    }
 }
