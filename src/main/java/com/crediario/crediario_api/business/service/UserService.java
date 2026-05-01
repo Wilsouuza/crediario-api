@@ -1,6 +1,7 @@
 package com.crediario.crediario_api.business.service;
 
 import com.crediario.crediario_api.business.dto.user.request.CreateUserRequest;
+import com.crediario.crediario_api.business.dto.user.request.LoginRequest;
 import com.crediario.crediario_api.business.dto.user.request.UpdatePasswordRequest;
 import com.crediario.crediario_api.business.dto.user.response.UserResponse;
 import com.crediario.crediario_api.business.entity.User;
@@ -38,10 +39,13 @@ public class UserService {
         return UserMapper.toResponse(savedUser);
     }
 
-    public User login(String login, String password){
+    public UserResponse login(LoginRequest request){
+        return UserMapper.toResponse(findByLoginAndPassword(request.login(), request.password()));
+    }
+
+    private User findByLoginAndPassword(String login, String password){
         User user = userRepository.findByLogin(login)
                 .orElseThrow(()-> new BusinessException("User not found."));
-
         if (!password.equals(user.getPassword())){
             throw new BusinessException("Incorrect password.");
         }
@@ -49,7 +53,7 @@ public class UserService {
     }
 
     public UserResponse updatePassword(UpdatePasswordRequest request){
-        User user = login(request.login(), request.currentPassword());
+        User user = findByLoginAndPassword(request.login(), request.currentPassword());
 
         if(request.newPassword().equals(user.getPassword())){
             throw new BusinessException("The new password cannot be the same as the current password.");
@@ -57,7 +61,7 @@ public class UserService {
         user.setPassword(request.newPassword());
         User savedUser = userRepository.save(user);
 
-        return  new UserResponse(savedUser.getId(), savedUser.getLogin(), savedUser.getUserType());
+        return  UserMapper.toResponse(savedUser);
     }
 
     public void delete(Long id){
