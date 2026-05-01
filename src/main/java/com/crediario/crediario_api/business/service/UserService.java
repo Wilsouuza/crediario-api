@@ -28,7 +28,7 @@ public class UserService {
         Optional<User> user = userRepository.findByLogin(request.login());
 
         if (user.isPresent()){
-            throw new BusinessException("Login already exists.");
+            throw new BusinessException("User already exists.");
         }
 
         User newUser = UserMapper.toEntity(request);
