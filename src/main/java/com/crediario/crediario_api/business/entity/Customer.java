@@ -37,6 +37,7 @@ public class Customer {
     @NotBlank
     private String profession;
 
+    @NotNull
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
@@ -51,4 +52,13 @@ public class Customer {
     @Column(name = "registration_date", updatable = false)
     private LocalDateTime registrationDate = LocalDateTime.now();
 
+    public Customer(String name, String cpf, String phone, String profession, LocalDate birthDate, BigDecimal creditLimit, User registeredBy) {
+        this.name = name;
+        this.cpf = cpf;
+        this.phone = phone;
+        this.profession = profession;
+        this.birthDate = birthDate;
+        this.creditLimit = creditLimit;
+        this.registeredBy = registeredBy;
+    }
 }
