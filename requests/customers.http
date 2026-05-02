@@ -1,0 +1,27 @@
+###find All
+GET http://localhost:8080/customers
+
+###find by id
+GET http://localhost:8080/customers/2
+
+###find by Cpf
+GET http://localhost:8080/customers/cpf/12345678900
+
+### get available credit limit
+GET http://localhost:8080/customers/2/balance
+
+###create customer
+POST http://localhost:8080/customers
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "cpf": "98765432100",
+  "phone": "75987654321",
+  "profession": "Engenheiro",
+  "birthDate": "1995-06-20",
+  "registeredById": 1
+}
+
+
+

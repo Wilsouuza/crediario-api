@@ -23,17 +23,17 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleValidations(MethodArgumentNotValidException e){
+    public ErrorResponse handleValidationException(MethodArgumentNotValidException e) {
+        e.printStackTrace(); // adiciona isso temporariamente
         String message = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + " : " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-
         return new ErrorResponse(message);
     }
-
 }

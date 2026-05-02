@@ -1,0 +1,41 @@
+###findAll
+GET http://localhost:8080/users
+
+
+###findByType
+GET http://localhost:8080/users/CASHIER
+
+
+### Create User
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "login": "joao",
+  "password": "12345",
+  "userType": "CASHIER"
+}
+
+###login
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "password": "admin123"
+}
+
+###UpdatePassword
+PUT http://localhost:8080/users/password
+Content-Type: application/json
+
+{
+  "login": "wilson",
+  "currentPassword": "123",
+  "newPassword": "12345"
+}
+
+###Delete
+DELETE http://localhost:8080/users/7
+
+
