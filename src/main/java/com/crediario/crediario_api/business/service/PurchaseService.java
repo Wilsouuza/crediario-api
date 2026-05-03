@@ -1,15 +1,12 @@
 package com.crediario.crediario_api.business.service;
 
 import com.crediario.crediario_api.business.config.SystemConfig;
-import com.crediario.crediario_api.business.dto.customer.response.CustomerResponse;
 import com.crediario.crediario_api.business.dto.purchase.request.CreatePurchaseRequest;
 import com.crediario.crediario_api.business.dto.purchase.response.PurchaseResponse;
 import com.crediario.crediario_api.business.entity.Customer;
 import com.crediario.crediario_api.business.entity.Purchase;
 import com.crediario.crediario_api.business.exception.BusinessException;
-import com.crediario.crediario_api.business.mapper.CustomerMapper;
 import com.crediario.crediario_api.business.mapper.PurchaseMapper;
-import com.crediario.crediario_api.infrastructure.repository.CustomerRepository;
 import com.crediario.crediario_api.infrastructure.repository.PurchaseRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +14,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PurchaseService {
@@ -26,15 +22,15 @@ public class PurchaseService {
     private final UserService userService;
     private final PurchaseRepository purchaseRepository;
 
-    //TODO
-    //InstallmentService installmentService;
+    private final InstallmentService installmentService;
 
 
-    public PurchaseService(PurchaseRepository purchaseRepository, CustomerService customerService, SystemConfig systemConfig, UserService userService) {
-        this.purchaseRepository = purchaseRepository;
+    public PurchaseService(CustomerService customerService, SystemConfig systemConfig, UserService userService, PurchaseRepository purchaseRepository, InstallmentService installmentService) {
         this.customerService = customerService;
         this.systemConfig = systemConfig;
         this.userService = userService;
+        this.purchaseRepository = purchaseRepository;
+        this.installmentService = installmentService;
     }
 
     public PurchaseResponse createPurchase(CreatePurchaseRequest request) {
@@ -46,7 +42,7 @@ public class PurchaseService {
 
         Purchase newPurchase = new Purchase(customer, request.value(),request.qtyInstallments(), request.description());
         Purchase savedPurchase = purchaseRepository.save(newPurchase);
-        //installmentService.generateInstallments(savedPurchase);
+        installmentService.generateInstallments(savedPurchase);
 
         checkBonusCommission(customer,existingPurchases);
 
@@ -58,9 +54,9 @@ public class PurchaseService {
             throw new BusinessException("Insufficient Limit");
         }
 
-        /*if (installmentService.hasLateInstallments(customer.getId())){
+        if (installmentService.hasLateInstallments(customer)){
             throw new BusinessException("Customer has late installments");
-        }*/
+        }
 
         if (request.value().compareTo(systemConfig.getMinPurchaseAmount()) < 0){
             throw new BusinessException("Value below the minimum purchase.");
@@ -95,6 +91,13 @@ public class PurchaseService {
 
         return PurchaseMapper.toResponse(purchase);
     }
+
+    public Purchase findEntityById(Long id){
+       return purchaseRepository.findById(id)
+                .orElseThrow(()-> new BusinessException("Purchase not found"));
+    }
+
+
 
     public List<PurchaseResponse> findByCustomer(Long id) {
         Customer customer = customerService.findEntityById(id);

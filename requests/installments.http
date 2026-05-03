@@ -1,0 +1,8 @@
+### find by purchase
+GET http://localhost:8080/installments/purchase/1
+
+### find by customer
+GET http://localhost:8080/installments/customer/09876543211
+
+### update overdue installments
+PUT http://localhost:8080/installments/update-overdue

@@ -4,6 +4,7 @@ import com.crediario.crediario_api.business.config.SystemConfig;
 import com.crediario.crediario_api.business.dto.customer.request.CreateCustomerRequest;
 import com.crediario.crediario_api.business.dto.customer.response.CustomerResponse;
 import com.crediario.crediario_api.business.entity.Customer;
+import com.crediario.crediario_api.business.entity.Installment;
 import com.crediario.crediario_api.business.entity.User;
 import com.crediario.crediario_api.business.exception.BusinessException;
 import com.crediario.crediario_api.business.mapper.CustomerMapper;
@@ -22,12 +23,14 @@ public class CustomerService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final SystemConfig systemConfig;
+    private final InstallmentService installmentService;
 
-    public CustomerService(CustomerRepository customerRepository, UserRepository userRepository, UserService userService, SystemConfig systemConfig) {
+    public CustomerService(CustomerRepository customerRepository, UserRepository userRepository, UserService userService, SystemConfig systemConfig, InstallmentService installmentService) {
         this.customerRepository = customerRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.systemConfig = systemConfig;
+        this.installmentService = installmentService;
     }
 
     public CustomerResponse createCustomer(CreateCustomerRequest request){
@@ -70,6 +73,11 @@ public class CustomerService {
         return CustomerMapper.toResponse(customer);
     }
 
+    public Customer findByEntityByCpf(String cpf){
+        return customerRepository.findByCpf(cpf)
+                .orElseThrow(()-> new BusinessException("Customer not found"));
+    }
+
     public Customer findEntityById(Long id){
         return customerRepository.findById(id)
                 .orElseThrow(()-> new BusinessException("Customer not found."));
@@ -78,8 +86,14 @@ public class CustomerService {
     public BigDecimal getAvailableLimit(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Customer not found."));
-        // TODO: subtract open installments
-        return customer.getCreditLimit();
+
+        List<Installment> openInstallments = installmentService.getOpenInstallmentByCustomer(customer.getId());
+
+        BigDecimal totalDebit = openInstallments.stream()
+                .map(Installment::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return customer.getCreditLimit().subtract(totalDebit);
     }
 
 }

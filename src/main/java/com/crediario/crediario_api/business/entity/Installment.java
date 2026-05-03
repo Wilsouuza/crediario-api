@@ -39,5 +39,12 @@ public class Installment {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private InstallmentStatus status;
+    private InstallmentStatus status = InstallmentStatus.PENDING;
+
+    public Installment(Purchase purchase, BigDecimal value, LocalDate dueDate) {
+        this.purchase = purchase;
+        this.value = value;
+        this.dueDate = dueDate;
+
+    }
 }
