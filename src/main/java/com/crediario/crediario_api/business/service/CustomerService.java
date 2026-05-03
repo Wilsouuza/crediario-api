@@ -70,6 +70,11 @@ public class CustomerService {
         return CustomerMapper.toResponse(customer);
     }
 
+    public Customer findEntityById(Long id){
+        return customerRepository.findById(id)
+                .orElseThrow(()-> new BusinessException("Customer not found."));
+    }
+
     public BigDecimal getAvailableLimit(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Customer not found."));

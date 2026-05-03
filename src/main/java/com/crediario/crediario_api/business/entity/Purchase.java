@@ -43,4 +43,11 @@ public class Purchase {
 
     @NotBlank
     private String description;
+
+    public Purchase(Customer customer, BigDecimal value, int qtyInstallments, String description) {
+        this.customer = customer;
+        this.value = value;
+        this.qtyInstallments = qtyInstallments;
+        this.description = description;
+    }
 }

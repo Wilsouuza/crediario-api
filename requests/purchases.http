@@ -1,0 +1,19 @@
+### find all
+GET http://localhost:8080/purchases
+
+### find by id
+GET http://localhost:8080/purchases/1
+
+### find by customer
+GET http://localhost:8080/purchases/customer/3
+
+### crete purchase
+POST http://localhost:8080/purchases
+Content-Type: application/json
+
+{
+  "customerId": 3,
+  "value": "300",
+  "qtyInstallments": 3,
+  "description": "test1"
+}
