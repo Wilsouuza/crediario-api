@@ -19,9 +19,7 @@ public interface InstallmentRepository extends JpaRepository<Installment, Long> 
     public List<Installment> findByStatus(InstallmentStatus status);
     public List<Installment> findByPurchaseCustomerAndStatus(Customer customer, InstallmentStatus status);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Installment i SET i.status = :status WHERE i.id = :id")
-    void updateStatus(Long id, InstallmentStatus status);
+
+
 
 }

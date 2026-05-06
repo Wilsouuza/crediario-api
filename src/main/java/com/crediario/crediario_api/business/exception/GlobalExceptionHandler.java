@@ -28,7 +28,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse handleValidationException(MethodArgumentNotValidException e) {
-        e.printStackTrace(); // adiciona isso temporariamente
         String message = e.getBindingResult()
                 .getFieldErrors()
                 .stream()

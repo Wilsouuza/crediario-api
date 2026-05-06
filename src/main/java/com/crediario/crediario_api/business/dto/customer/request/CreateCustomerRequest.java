@@ -14,6 +14,6 @@ public record CreateCustomerRequest(
         @NotBlank String profession,
         @JsonFormat(pattern = "yyyy-MM-dd")
         @NotNull(message = "Birth date cannot be empty")
-                LocalDate birthDate,
+        LocalDate birthDate,
         @NotNull Long registeredById
 ) { }

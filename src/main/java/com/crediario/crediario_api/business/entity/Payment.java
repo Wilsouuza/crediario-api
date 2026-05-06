@@ -51,4 +51,13 @@ public class Payment {
     @NotNull
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    public Payment(Installment installment, BigDecimal originalAmount, BigDecimal fineAmount, BigDecimal interestAmount, BigDecimal paidAmount, PaymentMethod paymentMethod) {
+        this.installment = installment;
+        this.originalAmount = originalAmount;
+        this.fineAmount = fineAmount;
+        this.interestAmount = interestAmount;
+        this.paidAmount = paidAmount;
+        this.paymentMethod = paymentMethod;
+    }
 }

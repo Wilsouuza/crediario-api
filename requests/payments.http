@@ -1,0 +1,21 @@
+### find all
+GET http://localhost:8080/payments
+
+
+### find by customer
+GET http://localhost:8080/payments/customer/09876543211
+
+### find by purchase
+GET http://localhost:8080/payments/purchase/2
+
+### find by date range
+GET http://localhost:8080/payments/date-range?start=2026-01-01T00:00:00&end=2026-05-31T23:59:59
+
+### create payment
+POST http://localhost:8080/payments
+Content-Type: application/json
+
+{
+    "installmentId": 3,
+  "paymentMethod": "PIX"
+}
