@@ -4,6 +4,7 @@ import com.crediario.crediario_api.business.dto.user.request.CreateUserRequest;
 
 import com.crediario.crediario_api.business.dto.user.request.LoginRequest;
 import com.crediario.crediario_api.business.dto.user.request.UpdatePasswordRequest;
+import com.crediario.crediario_api.business.dto.user.response.LoginResponse;
 import com.crediario.crediario_api.business.dto.user.response.UserResponse;
 import com.crediario.crediario_api.business.enums.UserType;
 import com.crediario.crediario_api.business.service.UserService;
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
         return ResponseEntity.ok(userService.login(request));
 
     }

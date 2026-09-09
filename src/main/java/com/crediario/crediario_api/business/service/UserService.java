@@ -1,8 +1,10 @@
 package com.crediario.crediario_api.business.service;
 
+import com.crediario.crediario_api.business.config.JwtService;
 import com.crediario.crediario_api.business.dto.user.request.CreateUserRequest;
 import com.crediario.crediario_api.business.dto.user.request.LoginRequest;
 import com.crediario.crediario_api.business.dto.user.request.UpdatePasswordRequest;
+import com.crediario.crediario_api.business.dto.user.response.LoginResponse;
 import com.crediario.crediario_api.business.dto.user.response.UserResponse;
 import com.crediario.crediario_api.business.entity.User;
 import com.crediario.crediario_api.business.enums.UserType;
@@ -20,9 +22,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public UserResponse createUser(CreateUserRequest request){
@@ -39,8 +43,10 @@ public class UserService {
         return UserMapper.toResponse(savedUser);
     }
 
-    public UserResponse login(LoginRequest request){
-        return UserMapper.toResponse(findByLoginAndPassword(request.login(), request.password()));
+    public LoginResponse login(LoginRequest request){
+        User user = findByLoginAndPassword(request.login(), request.password());
+        String token = jwtService.generateToken(user.getLogin(), user.getUserType().name());
+        return new LoginResponse(token, user.getLogin(), user.getUserType().name());
     }
 
     private User findByLoginAndPassword(String login, String password){
