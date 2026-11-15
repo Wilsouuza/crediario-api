@@ -1,8 +1,12 @@
+
 ### find by purchase
 GET http://localhost:8080/installments/purchase/1
+Authorization: Bearer {{token}}
 
 ### find by customer
-GET http://localhost:8080/installments/customer/09876543211
+GET http://localhost:8080/installments/customer/98765432100
+Authorization: Bearer {{token}}
 
 ### update overdue installments
 PUT http://localhost:8080/installments/update-overdue
+Authorization: Bearer {{token}}

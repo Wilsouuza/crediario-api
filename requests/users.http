@@ -1,14 +1,18 @@
+Authorization: Bearer {{token}}
 ###findAll
 GET http://localhost:8080/users
+Authorization: Bearer {{token}}
 
 
 ###findByType
 GET http://localhost:8080/users/CASHIER
+Authorization: Bearer {{token}}
 
 
 ### Create User
 POST http://localhost:8080/users
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "login": "joao",
@@ -19,15 +23,33 @@ Content-Type: application/json
 ###login
 POST http://localhost:8080/users/login
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "login": "admin",
   "password": "admin123"
 }
+> {%
+    client.global.set("token", response.body.token);
+%}
+
+###login
+POST http://localhost:8080/users/login
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "login": "joao",
+  "password": "12345"
+}
+> {%
+    client.global.set("token", response.body.token);
+%}
 
 ###UpdatePassword
 PUT http://localhost:8080/users/password
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "login": "wilson",

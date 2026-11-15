@@ -1,18 +1,24 @@
+Authorization: Bearer {{token}}
 ###find All
 GET http://localhost:8080/customers
+Authorization: Bearer {{token}}
 
 ###find by id
-GET http://localhost:8080/customers/2
+GET http://localhost:8080/customers/1
+Authorization: Bearer {{token}}
 
 ###find by Cpf
-GET http://localhost:8080/customers/cpf/12345678900
+GET http://localhost:8080/customers/cpf/98765432100
+Authorization: Bearer {{token}}
 
 ### get available credit limit
 GET http://localhost:8080/customers/2/balance
+Authorization: Bearer {{token}}
 
 ###create customer
 POST http://localhost:8080/customers
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "João Silva",
