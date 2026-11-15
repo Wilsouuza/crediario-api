@@ -2,6 +2,7 @@ package com.crediario.crediario_api.business.config;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,13 @@ public class JwtService {
 
     @Value("${jwt.expiration}")
     private long expiration;
+
+    @PostConstruct
+    void validateSecret() {
+        if (secret.getBytes().length < 32) {
+            throw new IllegalStateException("jwt.secret must be at least 32 characters long");
+        }
+    }
 
     private SecretKey getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
