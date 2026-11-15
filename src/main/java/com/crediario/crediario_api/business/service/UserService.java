@@ -11,6 +11,7 @@ import com.crediario.crediario_api.business.enums.UserType;
 import com.crediario.crediario_api.business.exception.BusinessException;
 import com.crediario.crediario_api.business.mapper.UserMapper;
 import com.crediario.crediario_api.infrastructure.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.CredentialException;
@@ -23,10 +24,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, JwtService jwtService) {
+    public UserService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse createUser(CreateUserRequest request){
@@ -36,7 +39,9 @@ public class UserService {
             throw new BusinessException("User already exists.");
         }
 
-        User newUser = UserMapper.toEntity(request);
+        User newUser = new User(request.login(),
+                passwordEncoder.encode(request.password()),
+                request.userType());
 
         User savedUser = userRepository.save(newUser);
 
@@ -52,7 +57,7 @@ public class UserService {
     private User findByLoginAndPassword(String login, String password){
         User user = userRepository.findByLogin(login)
                 .orElseThrow(()-> new BusinessException("User not found."));
-        if (!password.equals(user.getPassword())){
+        if (!passwordEncoder.matches(password, user.getPassword())){
             throw new BusinessException("Incorrect password.");
         }
         return user;
@@ -61,7 +66,7 @@ public class UserService {
     public UserResponse updatePassword(UpdatePasswordRequest request){
         User user = findByLoginAndPassword(request.login(), request.currentPassword());
 
-        if(request.newPassword().equals(user.getPassword())){
+        if(passwordEncoder.matches(request.newPassword(), user.getPassword())){
             throw new BusinessException("The new password cannot be the same as the current password.");
         }
         user.setPassword(request.newPassword());
