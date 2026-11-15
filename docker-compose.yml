@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17
+    container_name: crediario-db
+    environment:
+      POSTGRES_DB: crediario
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - crediario-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d crediario"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  crediario-data:
+  
