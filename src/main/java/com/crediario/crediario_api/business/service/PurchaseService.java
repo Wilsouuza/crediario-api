@@ -9,6 +9,7 @@ import com.crediario.crediario_api.business.exception.BusinessException;
 import com.crediario.crediario_api.business.mapper.PurchaseMapper;
 import com.crediario.crediario_api.infrastructure.repository.PurchaseRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class PurchaseService {
         this.installmentService = installmentService;
     }
 
+    @Transactional
     public PurchaseResponse createPurchase(CreatePurchaseRequest request) {
         Customer customer = customerService.findEntityById(request.customerId());
 

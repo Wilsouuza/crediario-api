@@ -14,6 +14,7 @@ import com.crediario.crediario_api.infrastructure.repository.InstallmentReposito
 import com.crediario.crediario_api.infrastructure.repository.PaymentRepository;
 import com.crediario.crediario_api.infrastructure.repository.PurchaseRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class PaymentService {
         this.systemConfig = systemConfig;
     }
 
+    @Transactional
     public PaymentResponse createPayment(CreatePaymentRequest request){
         Installment installment = installmentRepository.findById(request.installmentId())
                 .orElseThrow(()-> new BusinessException("Installment not found."));

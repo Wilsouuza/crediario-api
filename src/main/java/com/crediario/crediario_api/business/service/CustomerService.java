@@ -11,6 +11,7 @@ import com.crediario.crediario_api.business.mapper.CustomerMapper;
 import com.crediario.crediario_api.infrastructure.repository.CustomerRepository;
 import com.crediario.crediario_api.infrastructure.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,6 +34,7 @@ public class CustomerService {
         this.installmentService = installmentService;
     }
 
+    @Transactional
     public CustomerResponse createCustomer(CreateCustomerRequest request){
         Optional<Customer> existing = customerRepository.findByCpf(request.cpf());
         if (existing.isPresent()){
